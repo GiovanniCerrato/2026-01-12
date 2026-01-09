@@ -12,56 +12,6 @@ class Model:
         self._optListaCostruttori = None
         self._optScore = None
 
-    def getListaPilotiOttima(self, k):
-        self._optListaPiloti = []
-        self._optScore = 365*100 # 100 anni in giorni
-
-        components = list(nx.connected_components(self._graph))
-
-        if k > len(components):
-            return None, 0
-
-        parziale = []
-        rimanenti= list(self._graph.nodes())
-        self._ricorsione(components, k, parziale, 0)
-        return self._optListaPiloti, self._optScore
-
-    def _ricorsione(self, componenti, k, parziale, index_componente):
-
-        # verifica condizione di ottimalità
-        if len(parziale) == k:
-            #condizione di ottimalità calcolata on the fly
-            date_di_nascita = [p.dob for p in parziale]
-            diff_attuale = (max(date_di_nascita) - min(date_di_nascita)).days
-
-            if diff_attuale < self._optScore:
-                self._optScore = diff_attuale
-                self._optListaPiloti = copy.deepcopy(parziale)
-            return # esco in ogni caso perchè ho già raggiunto il numero di piloti desiderati
-
-        # condizione di terminazione. Possiamo uscire in due casi:
-        # i) se l'indice della componente che sto analizzando ora è maggiore o uguale al numero di componenti totale,
-        # allora vuol dire che non ho più componenti da provare ad aggiugnere, per cui non ha senso andare avanti;
-        # ii) se il numero di componenti rimanenti (len(componenti) - index_componente) non è maggiore o uguale
-        # al numero di piloti desiderati (k - len(parziale)), allora vuol dire che le componenti che mi rimangono da
-        # testare non basterebbero comunque per ottenere i k piloti che sto cercando, per cui non ha senso andare avanti
-        if index_componente >= len(componenti) or (len(componenti) - index_componente) < (k - len(parziale)):
-            return
-
-        # Ricorsione: per ogni componente, provo a NON aggiungere oppure ad aggiungere il pilota, e vado avanti
-        # con la ricorsione in entrambi i casi
-
-        # Opzione 1: IGNORA la componente attuale e passa alla successiva
-        self._ricorsione(componenti, k, parziale, index_componente + 1)
-
-        # Opzione 2: INGAGGIA un pilota dalla componente attuale
-        componente_corrente = componenti[index_componente]
-        for pilota in componente_corrente:
-            # Recupera i dati del pilota dalla mappa solo se esiste
-            parziale.append(pilota)
-            self._ricorsione(componenti, k, parziale, index_componente + 1)
-            parziale.pop()
-
     def getYears(self):
         return DAO.getAllYears()
 
