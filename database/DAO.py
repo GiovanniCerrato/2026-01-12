@@ -51,9 +51,7 @@ class DAO():
         results = []
 
         cursor = conn.cursor(dictionary=True)
-        query = """SELECT res1.constructorId AS c1,
-                    res2.constructorId AS c2,
-                    COUNT(DISTINCT res1.driverId) AS weight
+        query = """SELECT res1.constructorId AS c1, res2.constructorId AS c2, COUNT(DISTINCT res1.driverId) AS weight
                     FROM results res1, results res2, races r1, races r2
                     WHERE res1.driverId = res2.driverId
                       AND res1.raceId = r1.raceId

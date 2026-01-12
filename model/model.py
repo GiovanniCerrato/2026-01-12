@@ -62,10 +62,10 @@ class Model:
             return None, 0
 
         parziale = []
-        self._ricorsioneCostruttori(components, k, parziale, 0)
+        self._ricorsione(components, k, parziale, 0)
         return self._optListaCostruttori, self._optScore
 
-    def _ricorsioneCostruttori(self, componenti, k, parziale, index_componente):
+    def _ricorsione(self, componenti, k, parziale, index_componente):
         # Base case: found k constructors
         if len(parziale) == k:
             # Check if all constructors have oldest_driver_dob
@@ -87,13 +87,13 @@ class Model:
             return
 
         # Option 1: Skip this component
-        self._ricorsioneCostruttori(componenti, k, parziale, index_componente + 1)
+        self._ricorsione(componenti, k, parziale, index_componente + 1)
 
         # Option 2: Choose one constructor from this component
         componente_corrente = componenti[index_componente]
         for costruttore in componente_corrente:
             if costruttore.oldest_driver_dob is not None:
                 parziale.append(costruttore)
-                self._ricorsioneCostruttori(componenti, k, parziale, index_componente + 1)
+                self._ricorsione(componenti, k, parziale, index_componente + 1)
                 parziale.pop()
 
