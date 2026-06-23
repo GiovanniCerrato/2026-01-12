@@ -34,7 +34,7 @@ class View(ft.UserControl):
                       vertical_alignment=ft.CrossAxisAlignment.END)
 
         self._btnstampa = ft.ElevatedButton(text="Stampa Dettagli",
-                                           on_click=self._controller.handleDettagli)
+                                           on_click=self._controller.handleDettagli,disabled = True)
         row2 = ft.Row([ft.Container(self._btnstampa, width=250)
                        ], alignment=ft.MainAxisAlignment.CENTER)
 

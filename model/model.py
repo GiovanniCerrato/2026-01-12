@@ -28,12 +28,15 @@ class Model:
             self._graph.add_edge(e.c1,e.c2,weight=e.weight)
         return
 
+    def getNumNodiArchi(self):
+        return self._graph.number_of_nodes(), self._graph.number_of_edges()
+
     def topTreArchi(self):
         listaArchi = list(self._graph.edges(data = True))
         listaArchi.sort(key=lambda x:x[2]["weight"],reverse=True)
-        return listaArchi
+        return listaArchi[:3]
 
-    def getNumCompConn(self):
+    def getNumCC(self):
         return nx.number_connected_components(self._graph)
 
     def getMaxCC(self):
@@ -41,11 +44,12 @@ class Model:
         for n in self._graph.nodes():
             if len(nx.node_connected_component(self._graph,n)) > len(compMax):
                 compMax = list(nx.node_connected_component(self._graph,n))
-        compMax.sort(key=lambda x:self._graph.degree(x),reverse=True)
-        return compMax
-
-
-
+        listaNodiDegree = []
+        for n in compMax:
+            degree = self._graph.degree(n)
+            listaNodiDegree.append((n,degree))
+        listaNodiDegree.sort(key=lambda x:x[1],reverse=True)
+        return listaNodiDegree
 
     def getAllYears(self):
         return DAO.getAllYears()
